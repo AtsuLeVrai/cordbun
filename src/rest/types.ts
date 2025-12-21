@@ -1,5 +1,5 @@
 import type { JsonErrorCode } from "../constants/index.js";
-import type { ApiErrorResponse } from "../types/error.js";
+import type { ApiErrorResponse } from "../resources/errors.js";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 

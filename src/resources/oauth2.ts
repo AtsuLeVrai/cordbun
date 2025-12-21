@@ -1,7 +1,7 @@
-import type { Application } from "./application.js";
-import type { Guild } from "./guild.js";
-import type { User } from "./user.js";
-import type { Webhook } from "./webhook.js";
+import type { Application } from "./applications.js";
+import type { Guild } from "./guilds.js";
+import type { User } from "./users.js";
+import type { Webhook } from "./webhooks.js";
 
 export enum OAuth2Scope {
 	ActivitiesRead = "activities.read",

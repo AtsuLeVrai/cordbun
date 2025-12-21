@@ -1,8 +1,8 @@
-import type { Application } from "./application.js";
-import type { Channel } from "./channel.js";
-import type { Guild, GuildMember } from "./guild.js";
-import type { GuildScheduledEvent } from "./guild-scheduled-event.js";
-import type { User } from "./user.js";
+import type { Application } from "./applications.js";
+import type { Channel } from "./channels.js";
+import type { GuildScheduledEvent } from "./guild-scheduled-events.js";
+import type { Guild, GuildMember } from "./guilds.js";
+import type { User } from "./users.js";
 
 export enum InviteType {
 	Guild = 0,

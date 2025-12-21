@@ -1,6 +1,7 @@
-import type { GuildMember } from "./guild.js";
-import type { AllowedMentions, Attachment, Embed } from "./message.js";
-import type { User } from "./user.js";
+import type { GuildMember } from "./guilds.js";
+import type { AllowedMentions, Attachment, Embed } from "./messages.js";
+import type { User } from "./users.js";
+import type { PaginationParams } from "./utils.js";
 
 export enum ChannelType {
 	GuildText = 0,
@@ -125,9 +126,18 @@ export interface FollowedChannel {
 	webhook_id: string;
 }
 
-export interface ModifyChannelParams {
-	name?: string;
-	type?: ChannelType;
+export type ModifyChannelParams = Partial<
+	Pick<
+		Channel,
+		| "name"
+		| "type"
+		| "flags"
+		| "available_tags"
+		| "default_reaction_emoji"
+		| "default_thread_rate_limit_per_user"
+		| "default_forum_layout"
+	>
+> & {
 	position?: number | null;
 	topic?: string | null;
 	nsfw?: boolean | null;
@@ -139,19 +149,13 @@ export interface ModifyChannelParams {
 	rtc_region?: string | null;
 	video_quality_mode?: VideoQualityMode | null;
 	default_auto_archive_duration?: number | null;
-	flags?: ChannelFlags;
-	available_tags?: ForumTag[];
-	default_reaction_emoji?: DefaultReaction | null;
-	default_thread_rate_limit_per_user?: number;
 	default_sort_order?: SortOrderType | null;
-	default_forum_layout?: ForumLayoutType;
-}
+};
 
-export interface EditChannelPermissionsParams {
-	allow?: string | null;
-	deny?: string | null;
-	type: OverwriteType;
-}
+export type EditChannelPermissionsParams = Partial<
+	Pick<Overwrite, "allow" | "deny">
+> &
+	Pick<Overwrite, "type">;
 
 export interface CreateChannelInviteParams {
 	max_age?: number;
@@ -204,16 +208,17 @@ export interface StartThreadInForumOrMediaChannelParams {
 	applied_tags?: string[];
 }
 
-export interface ListThreadMembersParams {
+export type ListThreadMembersParams = Pick<
+	PaginationParams,
+	"after" | "limit"
+> & {
 	with_member?: boolean;
-	after?: string;
-	limit?: number;
-}
+};
 
-export interface ListArchivedThreadsParams {
-	before?: string;
-	limit?: number;
-}
+export type ListArchivedThreadsParams = Pick<
+	PaginationParams,
+	"before" | "limit"
+>;
 
 export interface ListArchivedThreadsResponse {
 	threads: Channel[];

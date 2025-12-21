@@ -1,5 +1,5 @@
-import type { Guild } from "./guild.js";
-import type { User } from "./user.js";
+import type { Guild } from "./guilds.js";
+import type { User } from "./users.js";
 
 export interface GuildTemplate {
 	code: string;

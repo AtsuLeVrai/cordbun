@@ -1,5 +1,5 @@
-import type { ChannelType } from "./channel.js";
-import type { Emoji } from "./emoji.js";
+import type { ChannelType } from "./channels.js";
+import type { Emoji } from "./emojis.js";
 
 export enum ComponentType {
 	ActionRow = 1,

@@ -1,9 +1,9 @@
 import type { AutoModerationRule } from "./auto-moderation.js";
-import type { Channel } from "./channel.js";
-import type { Integration } from "./guild.js";
-import type { GuildScheduledEvent } from "./guild-scheduled-event.js";
-import type { User } from "./user.js";
-import type { Webhook } from "./webhook.js";
+import type { Channel } from "./channels.js";
+import type { GuildScheduledEvent } from "./guild-scheduled-events.js";
+import type { Integration } from "./guilds.js";
+import type { User } from "./users.js";
+import type { Webhook } from "./webhooks.js";
 
 export enum AuditLogEvent {
 	GuildUpdate = 1,

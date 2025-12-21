@@ -1,5 +1,5 @@
-import { API_BASE_URL } from "../constants/api.js";
-import type { ApiErrorResponse } from "../types/error.js";
+import { API_BASE_URL, ApiVersion } from "../constants/index.js";
+import type { ApiErrorResponse } from "../resources/index.js";
 import { buildMultipartBody, createFileAttachment } from "../utils/index.js";
 import { createBucketManager, getRouteKey } from "./bucket.js";
 import {
@@ -24,7 +24,9 @@ const DEFAULT_OPTIONS: Required<Omit<RestOptions, "userAgent">> = {
 const LIB_VERSION = "0.0.1";
 const LIB_URL = "https://github.com/cordbun/cordbun";
 
-const VALID_API_VERSIONS = [6, 7, 8, 9, 10] as const;
+const VALID_API_VERSIONS = Object.values(ApiVersion).filter(
+	(v) => typeof v === "number",
+) as ApiVersion[];
 const VALID_AUTH_TYPES = ["Bot", "Bearer"] as const;
 
 const validateOptions = (options: RestOptions): void => {

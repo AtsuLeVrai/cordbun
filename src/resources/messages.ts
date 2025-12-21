@@ -1,9 +1,9 @@
-import type { Application } from "./application.js";
-import type { Channel } from "./channel.js";
-import type { Emoji } from "./emoji.js";
-import type { Poll } from "./poll.js";
-import type { Sticker, StickerItem } from "./sticker.js";
-import type { User } from "./user.js";
+import type { Application } from "./applications.js";
+import type { Channel } from "./channels.js";
+import type { Emoji } from "./emojis.js";
+import type { Poll } from "./polls.js";
+import type { Sticker, StickerItem } from "./stickers.js";
+import type { User } from "./users.js";
 
 export enum MessageType {
 	Default = 0,

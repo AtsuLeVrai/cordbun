@@ -1,12 +1,17 @@
-import type { ApplicationIntegrationType } from "./application.js";
-import type { Channel, ChannelType } from "./channel.js";
-import type { Component, ModalComponent } from "./component.js";
-import type { Entitlement } from "./entitlement.js";
-import type { Guild, GuildMember } from "./guild.js";
-import type { AllowedMentions, Attachment, Embed, Message } from "./message.js";
-import type { Poll } from "./poll.js";
-import type { Role } from "./role.js";
-import type { User } from "./user.js";
+import type { ApplicationIntegrationType } from "./applications.js";
+import type { Channel, ChannelType } from "./channels.js";
+import type { Component, ModalComponent } from "./components.js";
+import type { Entitlement } from "./entitlements.js";
+import type { Guild, GuildMember } from "./guilds.js";
+import type {
+	AllowedMentions,
+	Attachment,
+	Embed,
+	Message,
+} from "./messages.js";
+import type { Poll } from "./polls.js";
+import type { Role } from "./roles.js";
+import type { User } from "./users.js";
 
 export enum InteractionType {
 	Ping = 1,

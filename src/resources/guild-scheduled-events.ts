@@ -1,5 +1,5 @@
-import type { GuildMember } from "./guild.js";
-import type { User } from "./user.js";
+import type { GuildMember } from "./guilds.js";
+import type { User } from "./users.js";
 
 export enum GuildScheduledEventPrivacyLevel {
 	GuildOnly = 2,

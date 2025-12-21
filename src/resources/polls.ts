@@ -1,5 +1,5 @@
-import type { Emoji } from "./emoji.js";
-import type { User } from "./user.js";
+import type { Emoji } from "./emojis.js";
+import type { User } from "./users.js";
 
 export enum PollLayoutType {
 	Default = 1,

@@ -4,11 +4,12 @@ import type {
 	ForumTag,
 	Overwrite,
 	ThreadMember,
-} from "./channel.js";
-import type { Emoji } from "./emoji.js";
-import type { Role, RoleColors } from "./role.js";
-import type { Sticker } from "./sticker.js";
-import type { AvatarDecorationData, User } from "./user.js";
+} from "./channels.js";
+import type { Emoji } from "./emojis.js";
+import type { Role, RoleColors } from "./roles.js";
+import type { Sticker } from "./stickers.js";
+import type { AvatarDecorationData, User } from "./users.js";
+import type { PaginationParams } from "./utils.js";
 
 export enum DefaultMessageNotificationLevel {
 	AllMessages = 0,
@@ -268,28 +269,32 @@ export interface IncidentsData {
 	raid_detected_at?: string | null;
 }
 
-export interface ModifyGuildParams {
-	name?: string;
+export type ModifyGuildParams = Partial<
+	Pick<
+		Guild,
+		| "name"
+		| "afk_timeout"
+		| "icon"
+		| "splash"
+		| "discovery_splash"
+		| "banner"
+		| "system_channel_flags"
+		| "features"
+		| "description"
+		| "premium_progress_bar_enabled"
+	>
+> & {
 	region?: string | null;
 	verification_level?: VerificationLevel | null;
 	default_message_notifications?: DefaultMessageNotificationLevel | null;
 	explicit_content_filter?: ExplicitContentFilterLevel | null;
 	afk_channel_id?: string | null;
-	afk_timeout?: number;
-	icon?: string | null;
-	splash?: string | null;
-	discovery_splash?: string | null;
-	banner?: string | null;
 	system_channel_id?: string | null;
-	system_channel_flags?: SystemChannelFlags;
 	rules_channel_id?: string | null;
 	public_updates_channel_id?: string | null;
 	preferred_locale?: string | null;
-	features?: string[];
-	description?: string | null;
-	premium_progress_bar_enabled?: boolean;
 	safety_alerts_channel_id?: string | null;
-}
+};
 
 export interface CreateGuildChannelParams {
 	name: string;
@@ -324,10 +329,7 @@ export interface ListActiveGuildThreadsResponse {
 	members: ThreadMember[];
 }
 
-export interface ListGuildMembersParams {
-	limit?: number;
-	after?: string;
-}
+export type ListGuildMembersParams = Pick<PaginationParams, "limit" | "after">;
 
 export interface SearchGuildMembersParams {
 	query: string;
@@ -342,28 +344,20 @@ export interface AddGuildMemberParams {
 	deaf?: boolean;
 }
 
-export interface ModifyGuildMemberParams {
-	nick?: string;
-	roles?: string[];
-	mute?: boolean;
-	deaf?: boolean;
+export type ModifyGuildMemberParams = Partial<
+	Pick<GuildMember, "nick" | "roles" | "mute" | "deaf" | "flags">
+> & {
 	channel_id?: string;
 	communication_disabled_until?: string | null;
-	flags?: GuildMemberFlags;
-}
+};
 
-export interface ModifyCurrentMemberParams {
-	nick?: string | null;
-	banner?: string | null;
-	avatar?: string | null;
+export type ModifyCurrentMemberParams = Partial<
+	Pick<GuildMember, "nick" | "banner" | "avatar">
+> & {
 	bio?: string | null;
-}
+};
 
-export interface GetGuildBansParams {
-	limit?: number;
-	before?: string;
-	after?: string;
-}
+export type GetGuildBansParams = PaginationParams;
 
 export interface CreateGuildBanParams {
 	delete_message_days?: number;
@@ -396,16 +390,7 @@ export interface ModifyGuildRolePositionsParams {
 	position?: number | null;
 }
 
-export interface ModifyGuildRoleParams {
-	name?: string;
-	permissions?: string;
-	color?: number;
-	colors?: RoleColors;
-	hoist?: boolean;
-	icon?: string;
-	unicode_emoji?: string;
-	mentionable?: boolean;
-}
+export type ModifyGuildRoleParams = CreateGuildRoleParams;
 
 export interface GetGuildPruneCountParams {
 	days?: number;
@@ -419,20 +404,16 @@ export interface BeginGuildPruneParams {
 	reason?: string;
 }
 
-export interface ModifyGuildWelcomeScreenParams {
+export type ModifyGuildWelcomeScreenParams = Partial<
+	Pick<WelcomeScreen, "description" | "welcome_channels">
+> & {
 	enabled?: boolean;
-	welcome_channels?: WelcomeScreenChannel[];
-	description?: string;
-}
+};
 
-export interface ModifyGuildOnboardingParams {
-	prompts?: OnboardingPrompt[];
-	default_channel_ids?: string[];
-	enabled?: boolean;
-	mode?: OnboardingMode;
-}
+export type ModifyGuildOnboardingParams = Partial<
+	Pick<GuildOnboarding, "prompts" | "default_channel_ids" | "enabled" | "mode">
+>;
 
-export interface ModifyGuildIncidentActionsParams {
-	invites_disabled_until?: string | null;
-	dms_disabled_until?: string | null;
-}
+export type ModifyGuildIncidentActionsParams = Partial<
+	Pick<IncidentsData, "invites_disabled_until" | "dms_disabled_until">
+>;

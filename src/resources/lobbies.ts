@@ -1,4 +1,4 @@
-import type { Channel } from "./channel.js";
+import type { Channel } from "./channels.js";
 
 export enum LobbyMemberFlags {
 	CanLinkLobby = 1 << 0,

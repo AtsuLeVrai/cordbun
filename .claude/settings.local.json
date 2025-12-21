@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:support.discord.com)",
       "Bash(mkdir:*)",
-      "Bash(bun run type-check:*)"
+      "Bash(bun run type-check:*)",
+      "Bash(git mv:*)"
     ]
   }
 }

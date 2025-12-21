@@ -1,4 +1,4 @@
-import { DISCORD_EPOCH } from "../constants/api.js";
+import { DISCORD_EPOCH } from "../constants/index.js";
 
 export type Snowflake = `${bigint}`;
 

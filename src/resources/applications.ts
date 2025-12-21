@@ -1,6 +1,6 @@
-import type { Guild } from "./guild.js";
-import type { Team } from "./team.js";
-import type { User } from "./user.js";
+import type { Guild } from "./guilds.js";
+import type { Team } from "./teams.js";
+import type { User } from "./users.js";
 
 export enum ApplicationIntegrationType {
 	GuildInstall = 0,

@@ -1,8 +1,8 @@
-import type { Channel } from "./channel.js";
-import type { Guild } from "./guild.js";
-import type { AllowedMentions, Attachment, Embed } from "./message.js";
-import type { Poll } from "./poll.js";
-import type { User } from "./user.js";
+import type { Channel } from "./channels.js";
+import type { Guild } from "./guilds.js";
+import type { AllowedMentions, Attachment, Embed } from "./messages.js";
+import type { Poll } from "./polls.js";
+import type { User } from "./users.js";
 
 export enum WebhookType {
 	Incoming = 1,

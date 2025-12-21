@@ -1,4 +1,5 @@
-import type { Integration } from "./guild.js";
+import type { Integration } from "./guilds.js";
+import type { PaginationWithCountParams } from "./utils.js";
 
 export enum UserFlags {
 	Staff = 1 << 0,
@@ -137,18 +138,11 @@ export interface ApplicationRoleConnection {
 	metadata: Record<string, string>;
 }
 
-export interface ModifyCurrentUserParams {
-	username?: string;
-	avatar?: string | null;
-	banner?: string | null;
-}
+export type ModifyCurrentUserParams = Partial<
+	Pick<User, "username" | "avatar" | "banner">
+>;
 
-export interface GetCurrentUserGuildsParams {
-	before?: string;
-	after?: string;
-	limit?: number;
-	with_counts?: boolean;
-}
+export type GetCurrentUserGuildsParams = PaginationWithCountParams;
 
 export interface CreateDMParams {
 	recipient_id: string;
@@ -159,8 +153,8 @@ export interface CreateGroupDMParams {
 	nicks: Record<string, string>;
 }
 
-export interface UpdateApplicationRoleConnectionParams {
-	platform_name?: string;
-	platform_username?: string;
-	metadata?: Record<string, string>;
-}
+export type UpdateApplicationRoleConnectionParams = Partial<{
+	[K in keyof ApplicationRoleConnection]: NonNullable<
+		ApplicationRoleConnection[K]
+	>;
+}>;
