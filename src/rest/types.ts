@@ -1,0 +1,102 @@
+import type { JsonErrorCode } from "../constants/index.js";
+import type { ApiErrorResponse } from "../types/error.js";
+
+export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export type AuthType = "Bot" | "Bearer";
+
+export interface RestOptions {
+	authType?: AuthType;
+	version?: number;
+	userAgent?: string;
+	retries?: number;
+	timeout?: number;
+}
+
+export interface RequestOptions {
+	body?: unknown;
+	files?: FileData[];
+	query?: Record<string, string | number | boolean | undefined>;
+	reason?: string;
+	auth?: boolean;
+	headers?: Record<string, string>;
+}
+
+export interface FileData {
+	name: string;
+	data: Blob | ArrayBuffer | Uint8Array;
+	contentType?: string;
+}
+
+export interface RateLimitData {
+	limit: number;
+	remaining: number;
+	reset: number;
+	resetAfter: number;
+	bucket: string;
+	global: boolean;
+	scope?: RateLimitScope | undefined;
+}
+
+export type RateLimitScope = "user" | "global" | "shared";
+
+export interface RateLimitResponse {
+	message: string;
+	retry_after: number;
+	global: boolean;
+	code?: JsonErrorCode;
+}
+
+export interface RestResponse<T> {
+	data: T;
+	status: number;
+	headers: Headers;
+	rateLimit: RateLimitData | null;
+}
+
+export class RestError extends Error {
+	constructor(
+		public readonly status: number,
+		public readonly code: JsonErrorCode,
+		message: string,
+		public readonly errors?: ApiErrorResponse["errors"],
+		public readonly rateLimit?: RateLimitData,
+	) {
+		super(message);
+		this.name = "RestError";
+	}
+
+	static fromResponse(
+		response: ApiErrorResponse,
+		status: number,
+		rateLimit?: RateLimitData,
+	): RestError {
+		return new RestError(
+			status,
+			response.code,
+			response.message,
+			response.errors,
+			rateLimit,
+		);
+	}
+}
+
+export class RateLimitError extends Error {
+	constructor(
+		public readonly retryAfter: number,
+		public readonly global: boolean,
+		public readonly scope?: RateLimitScope,
+	) {
+		super(`Rate limited for ${retryAfter}s${global ? " (global)" : ""}`);
+		this.name = "RateLimitError";
+	}
+}
+
+export interface RateLimitBucket {
+	limit: number;
+	remaining: number;
+	reset: number;
+	processing: Promise<void> | null;
+}
+
+export type RouteMethod = `${HttpMethod} ${string}`;

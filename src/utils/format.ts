@@ -1,17 +1,12 @@
-export const DISCORD_EPOCH = 1420070400000n;
-export const CDN_URL = "https://cdn.discordapp.com";
-export const MEDIA_URL = "https://media.discordapp.net";
-export const API_URL = "https://discord.com/api";
-
 export enum TimestampStyle {
 	ShortTime = "t",
-	LongTime = "T",
+	MediumTime = "T",
 	ShortDate = "d",
 	LongDate = "D",
-	ShortDateTime = "f",
-	LongDateTime = "F",
+	LongDateShortTime = "f",
+	FullDateShortTime = "F",
 	ShortDateShortTime = "s",
-	ShortDateLongTime = "S",
+	ShortDateMediumTime = "S",
 	Relative = "R",
 }
 
@@ -22,384 +17,171 @@ export enum GuildNavigationType {
 	LinkedRoles = "linked-roles",
 }
 
-export enum ImageFormat {
-	Jpeg = "jpg",
-	Png = "png",
-	WebP = "webp",
-	Gif = "gif",
-	Avif = "avif",
-	Lottie = "json",
-}
+export type FormattedUser<T extends string = string> = `<@${T}>`;
+export type FormattedUserNick<T extends string = string> = `<@!${T}>`;
+export type FormattedChannel<T extends string = string> = `<#${T}>`;
+export type FormattedRole<T extends string = string> = `<@&${T}>`;
+export type SlashCommand<
+	N extends string = string,
+	I extends string = string,
+> = `</${N}:${I}>`;
+export type CustomEmoji<
+	N extends string = string,
+	I extends string = string,
+> = `<:${N}:${I}>`;
+export type AnimatedEmoji<
+	N extends string = string,
+	I extends string = string,
+> = `<a:${N}:${I}>`;
+export type Timestamp<T extends number = number> = `<t:${T}>`;
+export type TimestampStyled<
+	T extends number = number,
+	S extends TimestampStyle = TimestampStyle,
+> = `<t:${T}:${S}>`;
+export type GuildNavigation<
+	T extends GuildNavigationType | `linked-roles:${string}` =
+		| GuildNavigationType
+		| `linked-roles:${string}`,
+> = `<id:${T}>`;
+export type Email<
+	U extends string = string,
+	D extends string = string,
+> = `<${U}@${D}>`;
+export type PhoneNumber<T extends string = string> = `<+${T}>`;
 
-export function bold(text: string): string {
-	return `**${text}**`;
-}
+export type Italic<T extends string = string> = `*${T}*`;
+export type Bold<T extends string = string> = `**${T}**`;
+export type Underline<T extends string = string> = `__${T}__`;
+export type Strikethrough<T extends string = string> = `~~${T}~~`;
+export type Spoiler<T extends string = string> = `||${T}||`;
+export type BoldItalic<T extends string = string> = `***${T}***`;
+export type UnderlineItalic<T extends string = string> = `__*${T}*__`;
+export type UnderlineBold<T extends string = string> = `__**${T}**__`;
+export type UnderlineBoldItalic<T extends string = string> = `__***${T}***__`;
+export type InlineCode<T extends string = string> = `\`${T}\``;
+export type CodeBlock<T extends string = string> = `\`\`\`\n${T}\n\`\`\``;
+export type CodeBlockLang<
+	L extends string = string,
+	T extends string = string,
+> = `\`\`\`${L}\n${T}\n\`\`\``;
+export type BlockQuote<T extends string = string> = `> ${T}`;
+export type BlockQuoteMulti<T extends string = string> = `>>> ${T}`;
+export type Header1<T extends string = string> = `# ${T}`;
+export type Header2<T extends string = string> = `## ${T}`;
+export type Header3<T extends string = string> = `### ${T}`;
+export type Subtext<T extends string = string> = `-# ${T}`;
+export type MaskedLink<
+	T extends string = string,
+	U extends string = string,
+> = `[${T}](${U})`;
+export type ListItem<T extends string = string> = `- ${T}`;
 
-export function italic(text: string): string {
-	return `*${text}*`;
-}
+export const userMention = <T extends string>(userId: T): FormattedUser<T> =>
+	`<@${userId}>`;
 
-export function underline(text: string): string {
-	return `__${text}__`;
-}
+export const userMentionNick = <T extends string>(
+	userId: T,
+): FormattedUserNick<T> => `<@!${userId}>`;
 
-export function strikethrough(text: string): string {
-	return `~~${text}~~`;
-}
+export const channelMention = <T extends string>(
+	channelId: T,
+): FormattedChannel<T> => `<#${channelId}>`;
 
-export function spoiler(text: string): string {
-	return `||${text}||`;
-}
+export const roleMention = <T extends string>(roleId: T): FormattedRole<T> =>
+	`<@&${roleId}>`;
 
-export function inlineCode(text: string): string {
-	return `\`${text}\``;
-}
+export const slashCommand = <N extends string, I extends string>(
+	name: N,
+	commandId: I,
+): SlashCommand<N, I> => `</${name}:${commandId}>`;
 
-export function codeBlock(text: string, language?: string): string {
-	return `\`\`\`${language ?? ""}\n${text}\n\`\`\``;
-}
+export const customEmoji = <N extends string, I extends string>(
+	name: N,
+	id: I,
+): CustomEmoji<N, I> => `<:${name}:${id}>`;
 
-export function blockQuote(text: string): string {
-	return `>>> ${text}`;
-}
+export const animatedEmoji = <N extends string, I extends string>(
+	name: N,
+	id: I,
+): AnimatedEmoji<N, I> => `<a:${name}:${id}>`;
 
-export function quote(text: string): string {
-	return `> ${text}`;
-}
+export const timestamp = <T extends number>(unix: T): Timestamp<T> =>
+	`<t:${unix}>`;
 
-export function header(text: string, level: 1 | 2 | 3 = 1): string {
-	return `${"#".repeat(level)} ${text}`;
-}
+export const timestampStyled = <T extends number, S extends TimestampStyle>(
+	unix: T,
+	style: S,
+): TimestampStyled<T, S> => `<t:${unix}:${style}>`;
 
-export function subtext(text: string): string {
-	return `-# ${text}`;
-}
+export const guildNavigation = <
+	T extends GuildNavigationType | `linked-roles:${string}`,
+>(
+	type: T,
+): GuildNavigation<T> => `<id:${type}>`;
 
-export function bulletList(items: string[]): string {
-	return items.map((item) => `- ${item}`).join("\n");
-}
+export const email = <U extends string, D extends string>(
+	username: U,
+	domain: D,
+): Email<U, D> => `<${username}@${domain}>`;
 
-export function numberedList(items: string[]): string {
-	return items.map((item, i) => `${i + 1}. ${item}`).join("\n");
-}
+export const phoneNumber = <T extends string>(number: T): PhoneNumber<T> =>
+	`<+${number}>`;
 
-export function maskedLink(text: string, url: string): string {
-	return `[${text}](${url})`;
-}
+export const italic = <T extends string>(text: T): Italic<T> => `*${text}*`;
 
-export function suppressEmbed(url: string): string {
-	return `<${url}>`;
-}
+export const bold = <T extends string>(text: T): Bold<T> => `**${text}**`;
 
-export function userMention(userId: string): string {
-	return `<@${userId}>`;
-}
+export const underline = <T extends string>(text: T): Underline<T> =>
+	`__${text}__`;
 
-export function channelMention(channelId: string): string {
-	return `<#${channelId}>`;
-}
+export const strikethrough = <T extends string>(text: T): Strikethrough<T> =>
+	`~~${text}~~`;
 
-export function roleMention(roleId: string): string {
-	return `<@&${roleId}>`;
-}
+export const spoiler = <T extends string>(text: T): Spoiler<T> => `||${text}||`;
 
-export function slashCommand(name: string, commandId: string): string {
-	return `</${name}:${commandId}>`;
-}
+export const boldItalic = <T extends string>(text: T): BoldItalic<T> =>
+	`***${text}***`;
 
-export function slashCommandWithSubcommand(
-	name: string,
-	subcommand: string,
-	commandId: string,
-): string {
-	return `</${name} ${subcommand}:${commandId}>`;
-}
+export const underlineItalic = <T extends string>(
+	text: T,
+): UnderlineItalic<T> => `__*${text}*__`;
 
-export function slashCommandWithSubcommandGroup(
-	name: string,
-	group: string,
-	subcommand: string,
-	commandId: string,
-): string {
-	return `</${name} ${group} ${subcommand}:${commandId}>`;
-}
+export const underlineBold = <T extends string>(text: T): UnderlineBold<T> =>
+	`__**${text}**__`;
 
-export function customEmoji(name: string, emojiId: string): string {
-	return `<:${name}:${emojiId}>`;
-}
+export const underlineBoldItalic = <T extends string>(
+	text: T,
+): UnderlineBoldItalic<T> => `__***${text}***__`;
 
-export function animatedEmoji(name: string, emojiId: string): string {
-	return `<a:${name}:${emojiId}>`;
-}
+export const inlineCode = <T extends string>(code: T): InlineCode<T> =>
+	`\`${code}\``;
 
-export function timestamp(time: Date | number, style?: TimestampStyle): string {
-	const seconds =
-		typeof time === "number" ? time : Math.floor(time.getTime() / 1000);
-	return style ? `<t:${seconds}:${style}>` : `<t:${seconds}>`;
-}
+export const codeBlock = <T extends string>(code: T): CodeBlock<T> =>
+	`\`\`\`\n${code}\n\`\`\``;
 
-export function guildNavigation(type: GuildNavigationType): string {
-	return `<id:${type}>`;
-}
+export const codeBlockLang = <L extends string, T extends string>(
+	lang: L,
+	code: T,
+): CodeBlockLang<L, T> => `\`\`\`${lang}\n${code}\n\`\`\``;
 
-export function linkedRoleNavigation(roleId: string): string {
-	return `<id:linked-roles:${roleId}>`;
-}
+export const blockQuote = <T extends string>(text: T): BlockQuote<T> =>
+	`> ${text}`;
 
-export function email(address: string): string {
-	return `<${address}>`;
-}
+export const blockQuoteMulti = <T extends string>(
+	text: T,
+): BlockQuoteMulti<T> => `>>> ${text}`;
 
-export function emailWithParams(
-	address: string,
-	subject?: string,
-	body?: string,
-): string {
-	const params: string[] = [];
-	if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
-	if (body) params.push(`body=${encodeURIComponent(body)}`);
-	return params.length > 0
-		? `<${address}?${params.join("&")}>`
-		: `<${address}>`;
-}
+export const header1 = <T extends string>(text: T): Header1<T> => `# ${text}`;
 
-export function phoneNumber(number: string): string {
-	return `<+${number}>`;
-}
+export const header2 = <T extends string>(text: T): Header2<T> => `## ${text}`;
 
-export function snowflakeToTimestamp(snowflake: string): Date {
-	const id = BigInt(snowflake);
-	const timestamp = Number((id >> 22n) + DISCORD_EPOCH);
-	return new Date(timestamp);
-}
+export const header3 = <T extends string>(text: T): Header3<T> => `### ${text}`;
 
-export function timestampToSnowflake(timestamp: Date | number): string {
-	const ms = typeof timestamp === "number" ? timestamp : timestamp.getTime();
-	const snowflake = (BigInt(ms) - DISCORD_EPOCH) << 22n;
-	return snowflake.toString();
-}
+export const subtext = <T extends string>(text: T): Subtext<T> => `-# ${text}`;
 
-export function getDefaultAvatarIndex(userId: string): number {
-	return Number((BigInt(userId) >> 22n) % 6n);
-}
+export const maskedLink = <T extends string, U extends string>(
+	text: T,
+	url: U,
+): MaskedLink<T, U> => `[${text}](${url})`;
 
-export function getLegacyDefaultAvatarIndex(discriminator: string): number {
-	return Number.parseInt(discriminator, 10) % 5;
-}
-
-export function isAnimatedHash(hash: string): boolean {
-	return hash.startsWith("a_");
-}
-
-export function cdnUrl(
-	path: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	let url = `${CDN_URL}/${path}.${format}`;
-	if (size) url += `?size=${size}`;
-	return url;
-}
-
-export function emojiUrl(
-	emojiId: string,
-	format: ImageFormat = ImageFormat.WebP,
-	size?: number,
-): string {
-	return cdnUrl(`emojis/${emojiId}`, format, size);
-}
-
-export function guildIconUrl(
-	guildId: string,
-	iconHash: string,
-	format?: ImageFormat,
-	size?: number,
-): string {
-	const fmt =
-		format ?? (isAnimatedHash(iconHash) ? ImageFormat.Gif : ImageFormat.Png);
-	return cdnUrl(`icons/${guildId}/${iconHash}`, fmt, size);
-}
-
-export function guildSplashUrl(
-	guildId: string,
-	splashHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`splashes/${guildId}/${splashHash}`, format, size);
-}
-
-export function guildDiscoverySplashUrl(
-	guildId: string,
-	splashHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`discovery-splashes/${guildId}/${splashHash}`, format, size);
-}
-
-export function guildBannerUrl(
-	guildId: string,
-	bannerHash: string,
-	format?: ImageFormat,
-	size?: number,
-): string {
-	const fmt =
-		format ?? (isAnimatedHash(bannerHash) ? ImageFormat.Gif : ImageFormat.Png);
-	return cdnUrl(`banners/${guildId}/${bannerHash}`, fmt, size);
-}
-
-export function userBannerUrl(
-	userId: string,
-	bannerHash: string,
-	format?: ImageFormat,
-	size?: number,
-): string {
-	const fmt =
-		format ?? (isAnimatedHash(bannerHash) ? ImageFormat.Gif : ImageFormat.Png);
-	return cdnUrl(`banners/${userId}/${bannerHash}`, fmt, size);
-}
-
-export function defaultUserAvatarUrl(index: number): string {
-	return `${CDN_URL}/embed/avatars/${index}.png`;
-}
-
-export function userAvatarUrl(
-	userId: string,
-	avatarHash: string,
-	format?: ImageFormat,
-	size?: number,
-): string {
-	const fmt =
-		format ?? (isAnimatedHash(avatarHash) ? ImageFormat.Gif : ImageFormat.Png);
-	return cdnUrl(`avatars/${userId}/${avatarHash}`, fmt, size);
-}
-
-export function guildMemberAvatarUrl(
-	guildId: string,
-	userId: string,
-	avatarHash: string,
-	format?: ImageFormat,
-	size?: number,
-): string {
-	const fmt =
-		format ?? (isAnimatedHash(avatarHash) ? ImageFormat.Gif : ImageFormat.Png);
-	return cdnUrl(
-		`guilds/${guildId}/users/${userId}/avatars/${avatarHash}`,
-		fmt,
-		size,
-	);
-}
-
-export function guildMemberBannerUrl(
-	guildId: string,
-	userId: string,
-	bannerHash: string,
-	format?: ImageFormat,
-	size?: number,
-): string {
-	const fmt =
-		format ?? (isAnimatedHash(bannerHash) ? ImageFormat.Gif : ImageFormat.Png);
-	return cdnUrl(
-		`guilds/${guildId}/users/${userId}/banners/${bannerHash}`,
-		fmt,
-		size,
-	);
-}
-
-export function avatarDecorationUrl(asset: string): string {
-	return `${CDN_URL}/avatar-decoration-presets/${asset}.png`;
-}
-
-export function applicationIconUrl(
-	applicationId: string,
-	iconHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`app-icons/${applicationId}/${iconHash}`, format, size);
-}
-
-export function applicationCoverUrl(
-	applicationId: string,
-	coverHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`app-icons/${applicationId}/${coverHash}`, format, size);
-}
-
-export function applicationAssetUrl(
-	applicationId: string,
-	assetId: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`app-assets/${applicationId}/${assetId}`, format, size);
-}
-
-export function teamIconUrl(
-	teamId: string,
-	iconHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`team-icons/${teamId}/${iconHash}`, format, size);
-}
-
-export function stickerUrl(
-	stickerId: string,
-	format: ImageFormat = ImageFormat.Png,
-): string {
-	if (format === ImageFormat.Gif) {
-		return `${MEDIA_URL}/stickers/${stickerId}.gif`;
-	}
-	return `${CDN_URL}/stickers/${stickerId}.${format}`;
-}
-
-export function stickerPackBannerUrl(
-	assetId: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`app-assets/710982414301790216/store/${assetId}`, format, size);
-}
-
-export function roleIconUrl(
-	roleId: string,
-	iconHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`role-icons/${roleId}/${iconHash}`, format, size);
-}
-
-export function guildScheduledEventCoverUrl(
-	eventId: string,
-	coverHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`guild-events/${eventId}/${coverHash}`, format, size);
-}
-
-export function guildTagBadgeUrl(
-	guildId: string,
-	badgeHash: string,
-	format: ImageFormat = ImageFormat.Png,
-	size?: number,
-): string {
-	return cdnUrl(`guild-tag-badges/${guildId}/${badgeHash}`, format, size);
-}
-
-export function escapeMarkdown(text: string): string {
-	return text.replace(/([*_~`|\\<>[\]()])/g, "\\$1");
-}
-
-export function escapeMentions(text: string): string {
-	return text.replace(/@/g, "@\u200b");
-}
-
-export function escapeAll(text: string): string {
-	return escapeMentions(escapeMarkdown(text));
-}
+export const listItem = <T extends string>(text: T): ListItem<T> => `- ${text}`;
