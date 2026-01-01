@@ -1,4 +1,4 @@
-import type { RateLimitBucket, RateLimitData } from "./types.js";
+import type { RateLimitBucket, RateLimitData, RouteLike } from "./types.js";
 
 const DEFAULT_SWEEP_INTERVAL = 300_000;
 
@@ -105,7 +105,7 @@ export class BucketManager {
 	}
 }
 
-export const getRouteKey = (method: string, route: string): string => {
+export const getRouteKey = (method: string, route: RouteLike): string => {
 	const majorParams = route.match(/\/(channels|guilds|webhooks)\/(\d+)/);
 	const majorId = majorParams?.[2] ?? "";
 	const routeWithoutIds = route.replace(/\/\d+/g, "/:id");

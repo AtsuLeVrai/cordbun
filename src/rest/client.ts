@@ -1,9 +1,27 @@
 import { EventEmitter } from "node:events";
 import { API_BASE_URL, ApiVersion } from "../constants/index.js";
-import { type ApiErrorResponse, SkusAPI, SoundboardsAPI, SubscriptionsAPI, UsersAPI } from "../resources/index.js";
+import {
+	type ApiErrorResponse,
+	ApplicationRoleConnectionMetadataAPI,
+	ApplicationsAPI,
+	AutoModerationAPI,
+	EmojisAPI,
+	EntitlementsAPI,
+	GuildScheduledEventsAPI,
+	GuildTemplatesAPI,
+	InvitesAPI,
+	LobbiesAPI,
+	PollsAPI,
+	SkusAPI,
+	SoundboardsAPI,
+	StageInstancesAPI,
+	StickersAPI,
+	SubscriptionsAPI,
+	UsersAPI,
+} from "../resources/index.js";
 import { DEFAULT_ATTACHMENT_SIZE_LIMIT, Files } from "../utils/index.js";
 import { BucketManager, getRouteKey } from "./bucket.js";
-import type { RestEvents } from "./events.js";
+import type { RESTEvents } from "./events.js";
 import {
 	CloudflareError,
 	FileTooLargeError,
@@ -12,10 +30,11 @@ import {
 	RateLimitError,
 	type RateLimitResponse,
 	type RateLimitScope,
+	RESTError,
+	type RESTOptions,
+	type RESTResponse,
 	type RequestOptions,
-	RestError,
-	type RestOptions,
-	type RestResponse,
+	type RouteLike,
 	TimeoutError,
 } from "./types.js";
 
@@ -27,24 +46,36 @@ const LIB_URL = "https://github.com/cordbun/cordbun";
 const VALID_API_VERSIONS = Object.values(ApiVersion).filter((v) => typeof v === "number") as ApiVersion[];
 const VALID_AUTH_TYPES = ["Bot", "Bearer"] as const;
 
-type ResolvedRestOptions = Required<Omit<RestOptions, "userAgent">> & {
+type ResolvedRESTOptions = Required<Omit<RESTOptions, "userAgent">> & {
 	userAgent: string;
 };
 
-export class Rest extends EventEmitter<RestEvents> {
+export class REST extends EventEmitter<RESTEvents> {
+	public readonly applicationRoleConnectionMetadata = new ApplicationRoleConnectionMetadataAPI(this);
+	public readonly applications = new ApplicationsAPI(this);
+	public readonly autoModeration = new AutoModerationAPI(this);
+	public readonly emojis = new EmojisAPI(this);
+	public readonly entitlements = new EntitlementsAPI(this);
+	public readonly guildScheduledEvents = new GuildScheduledEventsAPI(this);
+	public readonly guildTemplates = new GuildTemplatesAPI(this);
+	public readonly invites = new InvitesAPI(this);
+	public readonly lobbies = new LobbiesAPI(this);
+	public readonly polls = new PollsAPI(this);
 	public readonly skus = new SkusAPI(this);
 	public readonly soundboards = new SoundboardsAPI(this);
+	public readonly stageInstances = new StageInstancesAPI(this);
+	public readonly stickers = new StickersAPI(this);
 	public readonly subscriptions = new SubscriptionsAPI(this);
 	public readonly users = new UsersAPI(this);
 
 	private token: string;
-	private config: ResolvedRestOptions;
+	private config: ResolvedRESTOptions;
 	private readonly buckets = new BucketManager();
 	private invalidRequestCount = 0;
 	private invalidRequestResetTime = Date.now() + INVALID_REQUEST_WINDOW;
 	private readonly invalidRequestWarningTimer: Timer | null = null;
 
-	constructor(token: string, options: RestOptions = {}) {
+	constructor(token: string, options: RESTOptions = {}) {
 		super();
 		this.token = token;
 		this.config = this.validateOptions(options);
@@ -67,10 +98,10 @@ export class Rest extends EventEmitter<RestEvents> {
 
 	async request<T>(
 		method: HttpMethod,
-		route: string,
+		route: RouteLike,
 		opts: RequestOptions = {},
 		retryCount = 0,
-	): Promise<RestResponse<T>> {
+	): Promise<RESTResponse<T>> {
 		const routeKey = getRouteKey(method, route);
 		const url = this.buildUrl(route, opts.query);
 
@@ -132,7 +163,7 @@ export class Rest extends EventEmitter<RestEvents> {
 			const responseData = await response.json();
 
 			if (!response.ok) {
-				throw RestError.fromResponse(responseData as ApiErrorResponse, response.status, rateLimit ?? undefined);
+				throw RESTError.fromResponse(responseData as ApiErrorResponse, response.status, rateLimit ?? undefined);
 			}
 
 			return {
@@ -154,7 +185,7 @@ export class Rest extends EventEmitter<RestEvents> {
 				return this.request(method, route, opts, retryCount + 1);
 			}
 
-			if (error instanceof RestError && error.status >= 500 && retryCount < this.config.retries) {
+			if (error instanceof RESTError && error.status >= 500 && retryCount < this.config.retries) {
 				await Bun.sleep(1000 * (retryCount + 1));
 				return this.request(method, route, opts, retryCount + 1);
 			}
@@ -170,23 +201,23 @@ export class Rest extends EventEmitter<RestEvents> {
 		}
 	}
 
-	async get<T>(route: string, opts?: RequestOptions): Promise<T> {
+	async get<T>(route: RouteLike, opts?: RequestOptions): Promise<T> {
 		return (await this.request<T>("GET", route, opts)).data;
 	}
 
-	async post<T>(route: string, opts?: RequestOptions): Promise<T> {
+	async post<T>(route: RouteLike, opts?: RequestOptions): Promise<T> {
 		return (await this.request<T>("POST", route, opts)).data;
 	}
 
-	async put<T>(route: string, opts?: RequestOptions): Promise<T> {
+	async put<T>(route: RouteLike, opts?: RequestOptions): Promise<T> {
 		return (await this.request<T>("PUT", route, opts)).data;
 	}
 
-	async patch<T>(route: string, opts?: RequestOptions): Promise<T> {
+	async patch<T>(route: RouteLike, opts?: RequestOptions): Promise<T> {
 		return (await this.request<T>("PATCH", route, opts)).data;
 	}
 
-	async delete<T>(route: string, opts?: RequestOptions): Promise<T> {
+	async delete<T>(route: RouteLike, opts?: RequestOptions): Promise<T> {
 		return (await this.request<T>("DELETE", route, opts)).data;
 	}
 
@@ -202,7 +233,7 @@ export class Rest extends EventEmitter<RestEvents> {
 		this.removeAllListeners();
 	}
 
-	private validateOptions(options: RestOptions): ResolvedRestOptions {
+	private validateOptions(options: RESTOptions): ResolvedRESTOptions {
 		if (options.authType !== undefined && !VALID_AUTH_TYPES.includes(options.authType)) {
 			throw new TypeError(
 				`Invalid authType: ${options.authType}. Must be one of: ${VALID_AUTH_TYPES.join(", ")}`,
@@ -280,7 +311,7 @@ export class Rest extends EventEmitter<RestEvents> {
 		return headers;
 	}
 
-	private buildUrl(route: string, query?: RequestOptions["query"]): string {
+	private buildUrl(route: RouteLike, query?: RequestOptions["query"]): string {
 		const url = new URL(`${API_BASE_URL}/v${this.config.version}${route}`);
 
 		if (query) {

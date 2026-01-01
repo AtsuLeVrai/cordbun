@@ -1,4 +1,4 @@
-import type { Rest } from "../rest/client.js";
+import type { REST } from "../rest/index.js";
 
 /**
  * Types of SKUs (stock-keeping units).
@@ -53,9 +53,9 @@ export interface Sku {
  * @see {@link https://discord.com/developers/docs/resources/sku}
  */
 export class SkusAPI {
-	private readonly rest: Rest;
+	private readonly rest: REST;
 
-	constructor(rest: Rest) {
+	constructor(rest: REST) {
 		this.rest = rest;
 	}
 

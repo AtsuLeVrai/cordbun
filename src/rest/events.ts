@@ -1,6 +1,6 @@
 import type { RateLimitData } from "./types.js";
 
-export interface RestEvents {
+export interface RESTEvents {
 	request: [RequestInfo];
 	response: [ResponseInfo];
 	rateLimited: [RateLimitInfo];

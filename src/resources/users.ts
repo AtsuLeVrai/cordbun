@@ -1,4 +1,4 @@
-import type { Rest } from "../rest/client.js";
+import type { REST } from "../rest/index.js";
 import type { Channel } from "./channels.js";
 import type { Guild, GuildMember, Integration } from "./guilds.js";
 import type { PaginationWithCountParams } from "./utils.js";
@@ -299,9 +299,9 @@ export type UpdateApplicationRoleConnectionParams = Partial<{
  * @see {@link https://discord.com/developers/docs/resources/user}
  */
 export class UsersAPI {
-	private readonly rest: Rest;
+	private readonly rest: REST;
 
-	constructor(rest: Rest) {
+	constructor(rest: REST) {
 		this.rest = rest;
 	}
 

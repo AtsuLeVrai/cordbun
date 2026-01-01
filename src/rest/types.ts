@@ -1,13 +1,15 @@
-import type { JsonErrorCode } from "../constants/index.js";
+import type { ApiVersion, JsonErrorCode } from "../constants/index.js";
 import type { ApiErrorResponse } from "../resources/errors.js";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
+export type RouteLike = `/${string}`;
+
 export type AuthType = "Bot" | "Bearer";
 
-export interface RestOptions {
+export interface RESTOptions {
 	authType?: AuthType;
-	version?: number;
+	version?: ApiVersion;
 	userAgent?: string;
 	retries?: number;
 	timeout?: number;
@@ -53,14 +55,14 @@ export interface RateLimitResponse {
 	code?: JsonErrorCode;
 }
 
-export interface RestResponse<T> {
+export interface RESTResponse<T> {
 	data: T;
 	status: number;
 	headers: Headers;
 	rateLimit: RateLimitData | null;
 }
 
-export class RestError extends Error {
+export class RESTError extends Error {
 	constructor(
 		public readonly status: number,
 		public readonly code: JsonErrorCode,
@@ -69,11 +71,11 @@ export class RestError extends Error {
 		public readonly rateLimit?: RateLimitData,
 	) {
 		super(message);
-		this.name = "RestError";
+		this.name = "RESTError";
 	}
 
-	static fromResponse(response: ApiErrorResponse, status: number, rateLimit?: RateLimitData): RestError {
-		return new RestError(status, response.code, response.message, response.errors, rateLimit);
+	static fromResponse(response: ApiErrorResponse, status: number, rateLimit?: RateLimitData): RESTError {
+		return new RESTError(status, response.code, response.message, response.errors, rateLimit);
 	}
 }
 

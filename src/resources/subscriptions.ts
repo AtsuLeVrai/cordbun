@@ -1,4 +1,4 @@
-import type { Rest } from "../rest/client.js";
+import type { REST } from "../rest/index.js";
 import type { PaginationParams } from "./utils.js";
 
 /**
@@ -56,9 +56,9 @@ export type ListSkuSubscriptionsParams = PaginationParams & {
  * @see {@link https://discord.com/developers/docs/resources/subscription}
  */
 export class SubscriptionsAPI {
-	private readonly rest: Rest;
+	private readonly rest: REST;
 
-	constructor(rest: Rest) {
+	constructor(rest: REST) {
 		this.rest = rest;
 	}
 

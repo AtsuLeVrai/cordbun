@@ -9,7 +9,7 @@
       "WebFetch(domain:discord.com)",
       "WebSearch",
       "Bash(bun run build)",
-      "Bash(bun run biome:check:*)",
+      "Bash(bun run check:*)",
       "Bash(bun install:*)"
     ]
   }

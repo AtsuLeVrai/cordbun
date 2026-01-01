@@ -1,4 +1,4 @@
-import type { Rest } from "../rest/client.js";
+import type { REST } from "../rest/index.js";
 import type { User } from "./users.js";
 
 /**
@@ -66,9 +66,9 @@ export type ModifyGuildSoundboardSoundParams = Partial<
  * @see {@link https://discord.com/developers/docs/resources/soundboard}
  */
 export class SoundboardsAPI {
-	private readonly rest: Rest;
+	private readonly rest: REST;
 
-	constructor(rest: Rest) {
+	constructor(rest: REST) {
 		this.rest = rest;
 	}
 
